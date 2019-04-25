@@ -7,33 +7,33 @@ router.get('/', async ctx => {
 })
 
 router.post('/register', async ctx => {
-	ctx.body = 'register'
-	// const User = mongoose.model('User')
-	// let newUser = new User(ctx.request.body)
+	const User = mongoose.model('User')
+	let newUser = new User(ctx.request.body)
 
-	// await newUser.save().then(()=>{
-	//     ctx.body={
-	//         code:200,
-	//         message:'注册成功'
-	//     }
-	// }).catch(error=>{
-	//     ctx.body={
-	//         code:500,
-	//         message:error
-	//     }
-	// })
+	await newUser
+		.save()
+		.then(() => {
+			ctx.body = {
+				code: 200,
+				message: '注册成功'
+			}
+		})
+		.catch(error => {
+			ctx.body = {
+				code: 500,
+				message: error
+			}
+		})
 })
 
 router.post('/login', async ctx => {
-	let loginUser = ctx.request.body
-	console.log(loginUser)
-	let userName = loginUser.userName
-	let password = loginUser.password
+	let {userName} = ctx.request.body
+	let {password} = ctx.request.body
 
 	//引入User的model
 	const User = mongoose.model('User')
 
-	await User.findOne({userName: userName})
+	await User.findOne({userName})
 		.exec()
 		.then(async result => {
 			console.log(result)
@@ -46,10 +46,10 @@ router.post('/login', async ctx => {
 					})
 					.catch(error => {
 						console.log(error)
-						ctx.body = {code: 500, message: error}
+						ctx.body = {code: 500, message: '服务器异常'}
 					})
 			} else {
-				ctx.body = {code: 200, message: '用户名不存在'}
+				ctx.body = {code: 202, message: '用户名不存在'}
 			}
 		})
 		.catch(error => {

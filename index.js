@@ -1,33 +1,28 @@
 const Koa = require('koa')
-// const mongoose = require('mongoose')
 const Router = require('koa-router')
+const Bodyparser = require('koa-bodyparser')
+const cors = require('koa2-cors')
+const {connect, initSchemas} = require('./database/init.js')
 
 const app = new Koa()
 //装载所有子路由
 let router = new Router()
-
 let user = require('./appApi/user.js')
+let goods = require('./appApi/goods.js')
+
 router.use('/user', user.routes())
-//egg.js
+router.use('/goods', goods.routes())
 
 //加载路由中间件
-
+app.use(Bodyparser())
+app.use(cors())
 app.use(router.routes())
 app.use(router.allowedMethods())
-// const {connect, initSchemas} = require('./database/init.js')
-
-// ;(async () => {
-// 	await connect()
-// 	initSchemas()
-// 	let User = mongoose.model('User')
-// 	let oneuser = new User({userName: 'yangyimin3', password: '123456'})
-// 	oneuser.save().then(() => {
-// 		console.log('保存成功')
-// 	})
-// 	let oneSS = await User.findOne({}).exec()
-// 	console.log(`********* ${oneSS} ************`)
-// })()
-
+// 链接mongoose
+;(async () => {
+	await connect()
+	initSchemas()
+})()
 app.use(async ctx => {
 	ctx.body = 'hahaha'
 })

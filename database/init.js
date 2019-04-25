@@ -4,7 +4,7 @@ const glob = require('glob')
 const {resolve} = require('path')
 
 exports.initSchemas = () => {
-	glob.sync(resolve(__dirname, './schema', 'User.js')).forEach(require)
+	glob.sync(resolve(__dirname, './schema', '*')).forEach(require)
 }
 
 exports.connect = () => {
