@@ -9,9 +9,11 @@ const app = new Koa()
 let router = new Router()
 let user = require('./appApi/user.js')
 let goods = require('./appApi/goods.js')
+let movielist = require('./appApi/movieList.js')
 
 router.use('/user', user.routes())
 router.use('/goods', goods.routes())
+router.use('/movie', movielist.routes())
 
 //加载路由中间件
 app.use(Bodyparser())
